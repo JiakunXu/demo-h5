@@ -1,8 +1,3 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
@@ -19,6 +14,34 @@ import HelloWorld from './components/HelloWorld.vue'
 
   <RouterView />
 </template>
+
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+import { setToken } from '@/utils/auth'
+
+import HelloWorld from './components/HelloWorld.vue'
+
+const { proxy } = getCurrentInstance();
+
+onMounted(() => {
+  const token = getToken();
+
+  if (token) {
+    setToken(token);
+    proxy.$$emit("login", "success");
+  }
+});
+
+function getToken() {
+  return (
+    decodeURIComponent(
+      (new RegExp("[?|&]" + "token" + "=" + "([^&;]+?)(&|#|;|$)").exec(
+        location.href
+      ) || [, ""])[1].replace(/\+/g, "%20")
+    ) || null
+  );
+}
+</script>
 
 <style scoped>
 header {
