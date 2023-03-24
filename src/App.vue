@@ -8,6 +8,7 @@
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/demo">Demo</RouterLink>
       </nav>
     </div>
   </header>
@@ -18,6 +19,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { setToken } from '@/utils/auth'
+import { getTicket } from "@/api/weixin";
 
 import HelloWorld from './components/HelloWorld.vue'
 
@@ -29,6 +31,21 @@ onMounted(() => {
   if (token) {
     setToken(token);
     proxy.$$emit("login", "success");
+  } else {
+    getTicket({
+      url: location.href
+    }).then((res) => {
+      const { appId, timestamp, nonceStr, signature } = res.data;
+      wx.config({
+        debug: false,
+        appId,
+        timestamp,
+        nonceStr,
+        signature,
+        jsApiList: ["updateAppMessageShareData", "updateTimelineShareData"],
+        openTagList: ["wx-open-launch-weapp", "wx-open-launch-app"]
+      });
+    });
   }
 });
 
