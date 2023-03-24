@@ -32,8 +32,9 @@ function onLoad() {
 
 function onRefresh() {
     finished.value = false;
-    pageNo.value = 1;
     loading.value = true
+    pageNo.value = 1;
+
     onLoad();
 }
 
