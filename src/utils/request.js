@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Dialog, Toast } from 'vant'
+import { showConfirmDialog, showFailToast } from 'vant'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import { tansParams } from '@/utils/ruoyi'
@@ -75,7 +75,7 @@ service.interceptors.response.use(res => {
     if (code === 401) {
       if (!isRelogin.show) {
         isRelogin.show = true;
-        Dialog.confirm({
+        showConfirmDialog({
           title: '系统提示',
           message: '登录状态已过期，您可以继续留在该页面，或者重新登录',
           confirmButtonText: '重新登录',
@@ -91,10 +91,10 @@ service.interceptors.response.use(res => {
     }
       return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
     } else if (code === 500) {
-      Toast.fail(msg);
+      showFailToast(msg);
       return Promise.reject(new Error(msg))
     } else if (code !== 200) {
-      Toast.fail(msg);
+      showFailToast(msg);
       return Promise.reject('error')
     } else {
       return  Promise.resolve(res.data)
@@ -112,8 +112,7 @@ service.interceptors.response.use(res => {
     else if (message.includes("Request failed with status code")) {
       message = "系统接口" + message.substr(message.length - 3) + "异常";
     }
-    Toast({
-      type: 'fail',
+    showFailToast({
       message: message,
       duration: 5 * 1000
     });
