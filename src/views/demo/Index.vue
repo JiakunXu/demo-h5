@@ -1,13 +1,3 @@
-<template>
-    <div>
-        <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-            <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-                <van-cell v-for="item in list" :key="item.id" :title="item.name" />
-            </van-list>
-        </van-pull-refresh>
-    </div>
-</template>
-  
 <script setup>
 import { listCoupons } from "@/api/coupon";
 
@@ -58,7 +48,16 @@ function getCouponList(data) {
         finished.value = !rows || rows.length < pageSize.value;
     });
 }
-
 </script>
+
+<template>
+    <div>
+        <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+            <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+                <van-cell v-for="item in list" :key="item.id" :title="item.name" />
+            </van-list>
+        </van-pull-refresh>
+    </div>
+</template>
 
 <style scoped></style>
